@@ -92,10 +92,9 @@ const userPut = async (
   }
 
   try {
-    /*if (req.user && req.user.role !== 'admin') {
+    if (req.user && req.user.role !== 'admin') {
       throw new CustomError('Admin only', 403);
-    }*/
-
+    }
     const user = req.body;
 
     const result = await updateUser(user, req.params.id);
@@ -109,7 +108,7 @@ const userPut = async (
 // TODO: create userPutCurrent function to update current user
 // userPutCurrent should use updateUser function from userModel
 // userPutCurrent should use validationResult to validate req.body
-/*const userPutCurrent = async (
+const userPutCurrent = async (
   req: Request,
   res: Response<MessageResponse>,
   next: NextFunction
@@ -139,17 +138,12 @@ const userPut = async (
     next(error);
   }
 };
-*/
-const userPutCurrent = async (
-  req: Request<{}, {}, User>,
-  res: Response<User>,
-  next: NextFunction
-) => {};
+
 // TODO: create userDelete function for admin to delete user by id
 // userDelete should use deleteUser function from userModel
 // userDelete should use validationResult to validate req.params.id
 // userDelete should use req.user to get role
-/*
+
 const userDelete = async (
   req: Request<{id: number}, {}, {}>,
   res: Response<MessageResponse>,
@@ -178,18 +172,7 @@ const userDelete = async (
     next(error);
   }
 };
-*/
-const userDelete = async (
-  req: Request<{}, {}, User>,
-  res: Response<User>,
-  next: NextFunction
-) => {};
-const userDeleteCurrent = async (
-  req: Request<{}, {}, User>,
-  res: Response<User>,
-  next: NextFunction
-) => {};
-/*
+
 const userDeleteCurrent = async (
   req: Request,
   res: Response<MessageResponse>,
@@ -217,7 +200,8 @@ const userDeleteCurrent = async (
     next(error);
   }
 };
-*/
+
+
 const checkToken = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {
     next(new CustomError('token not valid', 403));

@@ -36,10 +36,10 @@ const getUser = async (userId: number): Promise<User> => {
 const addUser = async (user: User): Promise<MessageResponse> => {
   const [headers] = await promisePool.execute<ResultSetHeader>(
     `
-    INSERT INTO sssf_user (user_name, email, role, password) 
-    VALUES (?, ?, ?, ?)
+    INSERT INTO sssf_user (user_name, email, password) 
+    VALUES (?, ?, ?)
     `,
-    [user.user_name, user.email, user.role, user.password]
+    [user.user_name, user.email, user.password]
   );
   return {message: 'User added'};
 };

@@ -74,24 +74,39 @@ const catPut = async (
 
 // TODO: create catPost function to add new cat
 const catPost = async (
-  req: Request<{}, {}, Cat>,
-  res: Response<MessageResponse>,
+  req: Request<{}, {}, Omit<Cat, 'owner'> & {owner: number}>,
+  res: Response<MessageResponse, {coords: [number, number]}>,
   next: NextFunction
 ) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const messages: string = errors
-      .array()
-      .map((error) => `${error.msg}: ${error.param}`)
-      .join(', ');
-    console.log('cat_post validation', messages);
-    next(new CustomError(messages, 400));
-    return;
-  }
-
   try {
-    const cat = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const messages: string = errors
+        .array()
+        .map((error) => `${error.msg}: ${error.param}`)
+        .join(', ');
+      console.log('cat_post validation', messages);
+      next(new CustomError(messages, 400));
+      return;
+    }
+
+    const filename = req.file?.filename;
+
+    const [lat, lng] = res.locals.coords;
+
+    const {user_id} = req.user as User;
+
+    const cat: Cat = {
+      ...req.body,
+      filename: filename || '', // Ensure filename is always a string
+      lat,
+      lng,
+      owner: user_id,
+    };
+
+    // Use addCat function from catModel
     const result = await addCat(cat);
+
     res.json(result);
   } catch (error) {
     next(error);
