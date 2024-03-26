@@ -16,5 +16,8 @@
     "test/**/*.ts",
     "src/types/CustomError.ts",
     "src/types"
-  ]
+  ],
+  "ts-node": {
+    "files": true
+  }
 }
