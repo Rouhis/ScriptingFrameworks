@@ -62,6 +62,7 @@ const postCat = (
       .field('cat_name', 'Test Cat ' + new Date().toLocaleDateString('fi-FI'))
       .field('birthdate', '2020-01-01')
       .field('weight', 13.3)
+      //.field('location', JSON.stringify({type: 'Point', coordinates: [24, 60]}))
       .expect(200, (err, response) => {
         if (err) {
           reject(err);

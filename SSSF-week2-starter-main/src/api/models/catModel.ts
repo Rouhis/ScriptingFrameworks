@@ -18,17 +18,22 @@ const catSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  coords: {
+  location: {
     type: {
       type: String,
       enum: ['Point'],
-      required: true,
+    },
+    coordinates: {
+      type: [Number],
     },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Reference the User model by its name
+    required: [true, 'Owner is required.'],
   },
 });
+
+catSchema.index({location: '2dsphere'});
 
 export default mongoose.model<Cat>('Cat', catSchema);
