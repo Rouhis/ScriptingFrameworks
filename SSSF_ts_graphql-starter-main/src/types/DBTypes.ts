@@ -47,6 +47,8 @@ type UserTest = Partial<User>;
 
 type LoginUser = Omit<User, 'password'>;
 
+type UserWithoutPassword = Omit<User, 'password'>;
+
 export {
   Category,
   Animal,
@@ -58,4 +60,5 @@ export {
   UserInput,
   UserTest,
   LoginUser,
+  UserWithoutPassword,
 };
