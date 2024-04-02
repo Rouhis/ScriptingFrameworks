@@ -1,0 +1,5 @@
+type Catecory {
+  id: ID
+  category_name: String
+
+}
