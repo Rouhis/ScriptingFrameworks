@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import {SchemaTypes} from 'mongoose';
+import {Cat} from '../../types/DBTypes';
 
 const catSchema = new mongoose.Schema({
   cat_name: {
@@ -30,4 +31,4 @@ const catSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Cat', catSchema);
+export default mongoose.model<Cat>('Cat', catSchema);

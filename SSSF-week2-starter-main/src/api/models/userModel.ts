@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import {SchemaTypes} from 'mongoose';
+import {User} from '../../types/DBTypes';
 
 const userSchema = new mongoose.Schema(
   {
@@ -30,4 +31,4 @@ const userSchema = new mongoose.Schema(
   {timestamps: true}
 ); // Add timestamps for created and updated at
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model<User>('User', userSchema);
