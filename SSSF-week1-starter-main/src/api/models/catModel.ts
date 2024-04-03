@@ -7,11 +7,8 @@ import {MessageResponse, UploadResponse} from '../../types/MessageTypes';
 const getAllCats = async (): Promise<Cat[]> => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Cat[]>(
     `
-    SELECT cat_id, cat_name, weight, filename, birthdate, ST_X(coords) as lat, ST_Y(coords) as lng,
-    JSON_OBJECT('user_id', sssf_user.user_id, 'user_name', sssf_user.user_name) AS owner 
+    SELECT *
 	  FROM sssf_cat 
-	  JOIN sssf_user 
-    ON sssf_cat.owner = sssf_user.user_id
     `
   );
   if (rows.length === 0) {
@@ -25,15 +22,12 @@ const getAllCats = async (): Promise<Cat[]> => {
   return cats;
 };
 
-// TODO: create getCat function to get single cat
+// TODO: create getCat function to get single cat by id
 const getCat = async (catId: number): Promise<Cat> => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Cat[]>(
     `
-    SELECT cat_id, cat_name, weight, filename, birthdate, ST_X(coords) as lat, ST_Y(coords) as lng,
-    JSON_OBJECT('user_id', sssf_user.user_id, 'user_name', sssf_user.user_name) AS owner 
-	  FROM sssf_cat 
-	  JOIN sssf_user 
-    ON sssf_cat.owner = sssf_user.user_id
+    SELECT *
+    FROM sssf_cat
     WHERE cat_id = ?
     `,
     [catId]
@@ -41,9 +35,13 @@ const getCat = async (catId: number): Promise<Cat> => {
   if (rows.length === 0) {
     throw new CustomError('No cats found', 404);
   }
-  return rows[0];
-};
+  const cat = (rows as Cat[]).map((row) => ({
+    ...row,
+    owner: JSON.parse(row.owner?.toString() || '{}'),
+  }))[0];
 
+  return cat;
+};
 // TODO: use Utility type to modify Cat type for 'data'.
 // Note that owner is not User in this case. It's just a number (user_id)
 const addCat = async (data: Partial<Cat>): Promise<MessageResponse> => {
